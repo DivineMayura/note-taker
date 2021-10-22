@@ -15,31 +15,25 @@ app.use(express.static('public'));
 
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, '/public/notes.html')));
 // /////////////////////////////////////////////////
-app.route('/api/notes')
-    .get((req, res) => {
+app.get('/api/notes', (req, res) => {
 
-        const data = fs.readFile("./db/db.json", (err) => err ? console.log(err) : null)
-        console.log(data);
+        const data = fs.readFile("./db/db.json", (err) => err ? console.error(err) : null)
+        console.log(data, "yeah this is the data BUT FOR SOME REASON IT'S UNDEFINED WHY.");
         res.status(200).json(data)
 
     })
 
 ////////////////////////////////////////////////////////////////
 
-app.get('/notes', (req, res) => {
-    res.json(`${req.method} request received to retrieve notes`);
-    console.info(`${req.method} request received to retrieve notes`);
-});
-
-app.post('/notes', (req, res) => {
+app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a note`);
-    const { name, text } = req.body;
+    const { title, text } = req.body;
 
     // If all the required parts are present
-    if (name && text) {
+    if (title && text) {
         // Variable for the object we will save
         const newNote = {
-            name,
+            title,
             text,
             review_id: uuidv4()
         };
@@ -51,16 +45,17 @@ app.post('/notes', (req, res) => {
                 // Converts string into JSON object
                 const parsedNotes = JSON.parse(data);
 
-                // Adds a new review
+                // Adds a new note
                 parsedNotes.push(newNote);
                 fs.writeFile(
-                    './db/reviews.json',
+                    './db/db.json',
                     JSON.stringify(parsedNotes, null, 4),
                     (writeErr) =>
                         writeErr
                             ? console.error(writeErr)
                             : console.info('Successfully updated notes!')
                 );
+
             }
         });
 
@@ -78,7 +73,7 @@ app.post('/notes', (req, res) => {
 
 
 // ///////////////////////////////////////////////////////////////////////
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/notes.html')));
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/index.html')));
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT}`)
