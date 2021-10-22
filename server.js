@@ -1,12 +1,13 @@
 
 const express = require('express');
+const util = require('util')
 const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const { eyes } = require('./middleware/eyes');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const path = require('path');
-
+const promisified = util.promisify(fs.readFile)
 app.use(eyes); //this is my custom middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -17,11 +18,11 @@ app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, '/public/notes
 // /////////////////////////////////////////////////
 app.get('/api/notes', (req, res) => {
 
-        const data = fs.readFile("./db/db.json", (err) => err ? console.error(err) : null)
-        console.log(data, "yeah this is the data BUT FOR SOME REASON IT'S UNDEFINED WHY.");
-        res.status(200).json(data)
+        promisified("./db/db.json", (err) => err ? console.error(err) : null)
+        // .then(data => console.log(data))
+        .then(data => res.json(JSON.parse(data)))
 
-    })
+    });
 
 ////////////////////////////////////////////////////////////////
 
