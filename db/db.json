@@ -7,11 +7,11 @@
     {
         "title": "This",
         "text": "Should work?",
-        "review_id": "c6cea1ad-c41d-472a-9397-71d873760ef8"
+        "id": "c6cea1ad-c41d-472a-9397-71d873760ef8"
     },
     {
         "title": "does this append?",
         "text": "wat the heck\n",
-        "review_id": "f967e10e-97d0-4e6e-a1a3-7471f3d9a59e"
+        "id": "f967e10e-97d0-4e6e-a1a3-7471f3d9a59e"
     }
 ]
